@@ -8,30 +8,47 @@ import org.jbox2d.dynamics.joints.*;
 PImage main_background;
 SimpleOpenNI kinect;
 boolean isTracking = false;
-PBox2D box2d;
-ArrayList<Box> boxes;
+//PBox2D box2d;
+//ArrayList<Box> boxes;
+Car plr;
+int cell_width;
+int cell_height;
+int row_count = 20;
+int col_count = 10;
 
 void setup() {
 	main_background = loadImage("RoadTexture.jpg");
 	size(main_background.width, main_background.height);
 	noStroke();
 
-	box2d = new PBox2D(this);
-    box2d.createWorld();
-    box2d.setGravity(0, -10);
+	//box2d = new PBox2D(this);
+    //box2d.createWorld();
+    //box2d.setGravity(0, -10);
 
-    boxes = new ArrayList<Box>();
+    //boxes = new ArrayList<Box>();
 	kinect = new SimpleOpenNI(this);
 	kinect.setMirror(true);
 	kinect.enableDepth();
 	kinect.enableUser();
+
+	cell_width = main_background.width / col_count;
+	cell_height = main_background.height / row_count;
+	plr = new Car(new Vec2(main_background.width / 2, cell_height * 2), cell_width, cell_height);
 	//c = new Car(new Vec2(100,100));
 }
 
 void draw() {
 	kinect.update();
 	background(main_background);
-	box2d.step();
+	//fill(0, 255, 0, 0);
+	stroke(0, 255, 0, 255);
+	for (int i = 1; i < col_count; i++){
+		line(cell_height*i, 0, cell_height*i, main_background.height);
+	}
+	for (int i = 1; i <  row_count; i++){
+		line(0, cell_width*i, main_background.width, cell_width*i);
+	}
+	/*box2d.step();
 
 	if (boxes.size() < 4 && random(1) < 0.05){
 		if (random(1) <= 0.5) {
@@ -52,7 +69,9 @@ void draw() {
     	if (b.done()) {
       		boxes.remove(i);
     	}
-    }	
+    }	*/
+    //plr.move(new Vec2(150, 150));
+    //plr.display();
 
 	//PImage depthImage=kinect.depthImage();
 
@@ -72,8 +91,14 @@ void draw() {
 	      	kinect.getJointPositionSkeleton(uid,SimpleOpenNI.SKEL_RIGHT_HAND,realRHand);
 	      	PVector projRHand=new PVector();
 	      	kinect.convertRealWorldToProjective(realRHand, projRHand);
-	      	fill(0,255,0);
-	      	ellipse(projRHand.x,projRHand.y + main_background.height / 2,10,10);
+	      	//fill(0,255,0);
+	      	//ellipse(projRHand.x,projRHand.y + main_background.height / 2,10,10);
+	      	if (projRHand.x < main_background.width / 2){
+	      		plr.move(new Vec2(2, row_count - 2));
+	      	}else{
+	      		plr.move(new Vec2(7, row_count - 2));
+	      	}
+	      	plr.display();
 	 	}
   	}
  	
