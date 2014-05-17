@@ -43,8 +43,20 @@ public class Car {
     }
   }
 
+  public boolean intersectsWith(Car c) { //Should be optimized
+    for (Vec2 shift : shifts) {
+      if (mc.x*def_width + shift.x*def_width == c.mc.x*def_width + shift.x*def_width 
+        && mc.y*def_height + shift.y*def_height == c.mc.y*def_height + shift.y*def_height){
+        return true;
+      }
+    }
+    return false;
+  }
+
   public boolean finished() {
-    return (false); //NOT IMPLEMENTED EXCEPTION
+    if (mc.y + 3 > def_height)
+      return (true);
+    return (false);
   }
 
 }

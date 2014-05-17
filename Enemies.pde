@@ -5,6 +5,7 @@ class Enemies {
   int last_enemy_time;
   int time, update_step;
   double p_gen; //probabilities of enemy generation and
+  int Car_length = 7;
 
   public Enemies(int w, int h, int update_step) {
     enemyList = new ArrayList<Car>();
@@ -12,8 +13,8 @@ class Enemies {
     this.h = h;
     this.update_step = update_step;
     last_enemy_side = false;
-    last_enemy_time = 0;
-    p_gen = 0.3;
+    last_enemy_time = 3;
+    p_gen = 0.5;
     time = millis();
   }
 
@@ -29,9 +30,10 @@ class Enemies {
 
   void generate_enemy() {
     //System.out.println(last_enemy_time);
-    if (last_enemy_time > 3) {
-      double rand = Math.random();
-      if (rand <= p_gen) {
+    generate_enemy_original();
+    /*if (last_enemy_time > 3) {
+      double rnd = Math.random();
+      if (rnd <= p_gen) {
         if (last_enemy_time > 7) {
           generate_enemy(!last_enemy_side);
         } else {
@@ -43,7 +45,50 @@ class Enemies {
       }
     } else {
       last_enemy_time++;
+    }*/
+  }
+
+  void generate_enemy_original(){
+    if (last_enemy_time > 7){
+      last_enemy_time = 0;
+      if (Math.random() < p_gen){
+        generate_enemy(last_enemy_side);
+      }else {
+        generate_enemy(!last_enemy_side);
+      }
+    } else {
+      last_enemy_time++;
     }
+  }
+
+  void generate_enemy_plus(){
+    if (last_enemy_time > 7){
+      last_enemy_time = 0;
+      //if (Math.random() < p_gen){
+        //generate_enemy(last_enemy_side);
+      //}else {
+        generate_enemy(!last_enemy_side);
+      //}
+    }else if (last_enemy_time > 3 && Math.random() < (1 - p_gen)/2) {
+      generate_enemy(last_enemy_side);
+      last_enemy_time = 0;
+    } else {
+      last_enemy_time++;
+    }
+  }
+
+  boolean collisionExists(Car plr){
+    for (Car c : enemyList) {
+      if (plr.intersectsWith(c)){
+        return true;
+      }
+    }
+    return false;
+  }
+
+  //For debug
+  String size(){
+    return String.valueOf(enemyList.size());
   }
 
   void update() {
@@ -55,12 +100,16 @@ class Enemies {
 
   public void display() {
     for(Car c : enemyList) {
-      c.display();
+      if (c.finished()){
+        enemyList.remove(c);
+        break;
+      }else {
+        c.display(); 
+      }
     }
     if (millis() - time >= update_step) {
       update();
       time = millis();
     }
   }
-
 }

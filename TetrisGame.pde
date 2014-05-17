@@ -1,12 +1,13 @@
 import SimpleOpenNI.*;
 //import pbox2d.*;
-import org.jbox2d.collision.shapes.*;
-import org.jbox2d.common.*;
-import org.jbox2d.dynamics.*;
-import org.jbox2d.dynamics.joints.*;
+//import org.jbox2d.collision.shapes.*;
+//import org.jbox2d.common.*;
+//import org.jbox2d.dynamics.*;
+//import org.jbox2d.dynamics.joints.*;
+//import java.util.Random;
 
 PImage main_background;
-//SimpleOpenNI kinect;
+SimpleOpenNI kinect;
 boolean isTracking = false;
 //PBox2D box2d;
 //ArrayList<Box> boxes;
@@ -23,20 +24,20 @@ void setup() {
   size(main_background.width, main_background.height);
   noStroke();
 
-  //kinect = new SimpleOpenNI(this);
-  //kinect.setMirror(true);
-  //kinect.enableDepth();
-  //kinect.enableUser();
+  kinect = new SimpleOpenNI(this);
+  kinect.setMirror(true);
+  kinect.enableDepth();
+  kinect.enableUser();
 
   cell_width = main_background.width / col_count;
   cell_height = main_background.height / row_count;
   plr = new Car(new Vec2(main_background.width / 2, cell_height * 2), cell_width, cell_height);
-  enemies = new Enemies(cell_width, cell_height, 300);
+  enemies = new Enemies(cell_width, cell_height, 150);
   //c = new Car(new Vec2(100,100));
 }
 
 void draw() {
-  //kinect.update();
+  kinect.update();
   background(main_background);
   //fill(0, 255, 0, 0);
   stroke(0, 255, 0, 255);
@@ -47,9 +48,12 @@ void draw() {
     line(0, cell_width*i, main_background.width, cell_width*i);
   }
 
-  enemies.display();
+  if (enemies.collisionExists(plr)){
+    println("Collision!");
+  }
 
-  /*
+  enemies.display();
+  
   int[] users=kinect.getUsers();
   if (isTracking){
     int uid = users[0];
@@ -62,7 +66,6 @@ void draw() {
         fill(0,255,0);
         ellipse(projHead.x,projHead.y,10,10);
         print(projHead.x,projHead.y);*/
-      /*
       PVector realRHand=new PVector();
       kinect.getJointPositionSkeleton(uid,SimpleOpenNI.SKEL_RIGHT_HAND,realRHand);
       PVector projRHand=new PVector();
@@ -77,8 +80,6 @@ void draw() {
       plr.display();
     }
   }
-  */
-
 }
 
 void onNewUser(SimpleOpenNI kin, int userId)
