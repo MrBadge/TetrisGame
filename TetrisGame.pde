@@ -7,6 +7,7 @@ import SimpleOpenNI.*;
 //import java.util.Random;
 
 PImage main_background;
+PImage road_part;
 SimpleOpenNI kinect;
 boolean isTracking = false;
 //PBox2D box2d;
@@ -17,10 +18,12 @@ int cell_width;
 int cell_height;
 int row_count = 20;
 int col_count = 10;
+int lines_count = 2;
 
 
 void setup() {
-  main_background = loadImage("RoadTexture.jpg");
+  road_part = loadImage("RoadPart.jpg");
+  main_background = createImage(road_part.width * lines_count, road_part.height, ARGB);
   size(main_background.width, main_background.height);
   noStroke();
 
@@ -38,7 +41,10 @@ void setup() {
 
 void draw() {
   kinect.update();
-  background(main_background);
+  for (int i = 0; i < lines_count; i++){
+    image(road_part, road_part.width*i, 0);
+  }
+  //background(main_background);
   //fill(0, 255, 0, 0);
   stroke(0, 255, 0, 255);
   for (int i = 1; i < col_count; i++){

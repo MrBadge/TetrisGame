@@ -30,7 +30,7 @@ class Enemies {
 
   void generate_enemy() {
     //System.out.println(last_enemy_time);
-    generate_enemy_original();
+    generate_enemy_plus();
     /*if (last_enemy_time > 3) {
       double rnd = Math.random();
       if (rnd <= p_gen) {
@@ -69,7 +69,7 @@ class Enemies {
       //}else {
         generate_enemy(!last_enemy_side);
       //}
-    }else if (last_enemy_time > 3 && Math.random() < (1 - p_gen)/2) {
+    }else if (last_enemy_time > 3 && Math.random() < (1 - p_gen)/3) {
       generate_enemy(last_enemy_side);
       last_enemy_time = 0;
     } else {
