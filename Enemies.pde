@@ -110,7 +110,7 @@ class Enemies {
     if (millis() - time >= update_step) {
       update();
       if (collisionExists(plr)){
-        println("Collision!" + Math.random());
+        //println("Collision!" + Math.random());
       }
       time = millis();
     }

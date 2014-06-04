@@ -45,7 +45,7 @@ public class Car {
 
   public boolean intersectsWith(Car c) { //Should be optimized
     for (Vec2 shift : shifts) {
-      if (mc.x == c.mc.x && Math.abs(mc.y - c.mc.y) < 2){
+      if (mc.x == c.mc.x && Math.abs(mc.y - c.mc.y) < 3){
         return true;
       }
     }

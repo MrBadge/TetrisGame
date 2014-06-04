@@ -1,4 +1,5 @@
 import SimpleOpenNI.*;
+import gifAnimation.*;
 //import pbox2d.*;
 //import org.jbox2d.collision.shapes.*;
 //import org.jbox2d.common.*;
@@ -10,6 +11,8 @@ PImage main_background;
 PImage road_part;
 SimpleOpenNI kinect;
 boolean isTracking = false;
+boolean isGameRunning = false;
+boolean isAnimPlaying = false;
 //PBox2D box2d;
 //ArrayList<Box> boxes;
 Car plr;
@@ -19,10 +22,13 @@ int cell_height;
 int row_count = 20;
 int col_count = 10;
 int lines_count = 2;
+Gif STanim;
 
 
 void setup() {
+  STanim = new Gif(this, "123.gif");
   road_part = loadImage("RoadPart.jpg");
+  //StartupManager stMan = new StartupManager(STanim);
   main_background = createImage(road_part.width * lines_count, road_part.height, ARGB);
   size(main_background.width, main_background.height);
   noStroke();
@@ -42,6 +48,7 @@ void setup() {
 
 void draw() {
   kinect.update();
+  
   for (int i = 0; i < lines_count; i++){
     image(road_part, road_part.width*i, 0);
   }
@@ -54,11 +61,10 @@ void draw() {
   for (int i = 1; i <  row_count; i++){
     line(0, cell_width*i, main_background.width, cell_width*i);
   }
-
-  enemies.display(plr);
   
   int[] users=kinect.getUsers();
-  if (isTracking){
+  if (isGameRunning){
+    enemies.display(plr);
     int uid = users[0];
     ellipseMode(CENTER);
     if (kinect.isTrackingSkeleton(uid)){
@@ -83,7 +89,20 @@ void draw() {
       plr.display();
     }
   }
-  plr.display();
+  //plr.display();
+  if (isTracking && !isGameRunning){
+    if (!isAnimPlaying){
+      STanim.play();
+      isAnimPlaying = true;
+    }
+    image(STanim, main_background.width / 2 - STanim.width / 2, main_background.height / 2 - STanim.height / 2);
+    if (!STanim.isPlaying()){
+      STanim.stop();
+      isGameRunning = true;
+      isAnimPlaying = false;
+      println("isGameRunning");
+    }
+  }
 }
 
 void onNewUser(SimpleOpenNI kin, int userId)
@@ -99,6 +118,7 @@ void onLostUser(SimpleOpenNI curContext, int userId)
 {
   println("onLostUser - userId: " + userId);
   isTracking = false;
+  isGameRunning = false;
 }
 
 void keyPressed() {
