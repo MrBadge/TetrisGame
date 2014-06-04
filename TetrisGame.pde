@@ -86,6 +86,7 @@ void draw() {
       plr.display();
     }
   }
+  plr.display();
 }
 
 void onNewUser(SimpleOpenNI kin, int userId)
@@ -101,4 +102,20 @@ void onLostUser(SimpleOpenNI curContext, int userId)
 {
   println("onLostUser - userId: " + userId);
   isTracking = false;
+}
+
+void keyPressed() {
+  switch(keyCode)
+  {
+    case LEFT:
+      plr.move(new Vec2(2, row_count - 2));
+      break;
+    case RIGHT:
+      plr.move(new Vec2(7, row_count - 2));
+      break;
+    case UP:
+      break;
+    case DOWN:
+      break;
+  }
 }
