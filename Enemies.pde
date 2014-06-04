@@ -6,6 +6,7 @@ class Enemies {
   int time, update_step;
   double p_gen; //probabilities of enemy generation and
   int Car_length = 7;
+  boolean pause;
 
   public Enemies(int w, int h, int update_step) {
     enemyList = new ArrayList<Car>();
@@ -16,6 +17,7 @@ class Enemies {
     last_enemy_time = 3;
     p_gen = 0.5;
     time = millis();
+    pause = false;
   }
 
   void generate_enemy(boolean side) {
@@ -76,6 +78,14 @@ class Enemies {
       last_enemy_time++;
     }
   }
+  
+  void setPause(boolean pause) {
+    this.pause = pause;
+  }
+  
+  boolean getPause() {
+    return pause;
+  }
 
   boolean collisionExists(Car plr){
     for (Car c : enemyList) {
@@ -104,10 +114,10 @@ class Enemies {
         enemyList.remove(c);
         break;
       }else {
-        c.display(); 
+        c.display();
       }
     }
-    if (millis() - time >= update_step) {
+    if (millis() - time >= update_step && !pause) {
       update();
       if (collisionExists(plr)){
         println("Collision!" + Math.random());

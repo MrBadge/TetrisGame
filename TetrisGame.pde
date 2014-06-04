@@ -10,10 +10,12 @@ PImage main_background;
 PImage road_part;
 SimpleOpenNI kinect;
 boolean isTracking = false;
+boolean isGameRunning = true;
 //PBox2D box2d;
 //ArrayList<Box> boxes;
 Car plr;
 Enemies enemies;
+GameOverManager gameover;
 int cell_width;
 int cell_height;
 int row_count = 20;
@@ -37,6 +39,7 @@ void setup() {
   plr = new Car(new Vec2(main_background.width / 2, cell_height * 2), cell_width, cell_height);
   plr.move(new Vec2(2, row_count - 2));
   enemies = new Enemies(cell_width, cell_height, 150);
+  gameover = new GameOverManager(row_count, col_count, cell_width, cell_height);
   //c = new Car(new Vec2(100,100));
 }
 
@@ -56,6 +59,7 @@ void draw() {
   }
 
   enemies.display(plr);
+  gameover.display();
   
   int[] users=kinect.getUsers();
   if (isTracking){
@@ -105,16 +109,19 @@ void keyPressed() {
   switch(keyCode)
   {
     case LEFT:
-      plr.move(new Vec2(2, row_count - 2));
+      if(isGameRunning) plr.move(new Vec2(2, row_count - 2));
       break;
     case RIGHT:
-      plr.move(new Vec2(7, row_count - 2));
+      if(isGameRunning) plr.move(new Vec2(7, row_count - 2));
       break;
     case UP:
-      plr.move(new Vec2(plr.mc.x, plr.mc.y-1));
+      isGameRunning = false;
+      enemies.setPause(true);
+      gameover.startGameOverAnimation(50);
       break;
     case DOWN:
-      plr.move(new Vec2(plr.mc.x, plr.mc.y+1));
+      isGameRunning = true;
+      enemies.setPause(false);
       break;
   }
 }
