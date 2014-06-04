@@ -98,7 +98,7 @@ class Enemies {
     generate_enemy();
   }
 
-  public void display() {
+  public void display(Car plr) {
     for(Car c : enemyList) {
       if (c.finished()){
         enemyList.remove(c);
@@ -109,6 +109,9 @@ class Enemies {
     }
     if (millis() - time >= update_step) {
       update();
+      if (collisionExists(plr)){
+        println("Collision!" + Math.random());
+      }
       time = millis();
     }
   }

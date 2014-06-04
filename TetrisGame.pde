@@ -35,6 +35,7 @@ void setup() {
   cell_width = main_background.width / col_count;
   cell_height = main_background.height / row_count;
   plr = new Car(new Vec2(main_background.width / 2, cell_height * 2), cell_width, cell_height);
+  plr.move(new Vec2(2, row_count - 2));
   enemies = new Enemies(cell_width, cell_height, 150);
   //c = new Car(new Vec2(100,100));
 }
@@ -54,11 +55,7 @@ void draw() {
     line(0, cell_width*i, main_background.width, cell_width*i);
   }
 
-  if (enemies.collisionExists(plr)){
-    println("Collision!");
-  }
-
-  enemies.display();
+  enemies.display(plr);
   
   int[] users=kinect.getUsers();
   if (isTracking){
@@ -114,8 +111,10 @@ void keyPressed() {
       plr.move(new Vec2(7, row_count - 2));
       break;
     case UP:
+      plr.move(new Vec2(plr.mc.x, plr.mc.y-1));
       break;
     case DOWN:
+      plr.move(new Vec2(plr.mc.x, plr.mc.y+1));
       break;
   }
 }
