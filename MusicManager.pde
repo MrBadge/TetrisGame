@@ -10,7 +10,7 @@ public class MusicManager {
 
 	void playMain() {
 		if (!mainSound.isPlaying()){
-			mainSound.play();
+			mainSound.loop();
 			mainSound.rewind();
 		}
 	}

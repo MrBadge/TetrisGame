@@ -93,13 +93,15 @@ void draw() {
       kinect.getCoM(uid,realCoM);
       kinect.convertRealWorldToProjective(realCoM, projCoM);
       if (projCoM.x < main_background.width / 2){
-        if (plr.getCurLine() == 1)
+        if (plr.getCurLine() == 1){
           musMan.playLineChange();
-        plr.move(new Vec2(2, row_count - 3));
+          plr.move(new Vec2(2, row_count - 3));
+        }
       }else{
-        if (plr.getCurLine() == 0)
+        if (plr.getCurLine() == 0){
           musMan.playLineChange();
-        plr.move(new Vec2(7, row_count - 3));
+          plr.move(new Vec2(7, row_count - 3));
+        }
       }
       //if (kinect.isTrackingSkeleton(uid)){
         /*PVector realHead=new PVector();
