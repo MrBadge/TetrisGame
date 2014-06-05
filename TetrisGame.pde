@@ -210,8 +210,10 @@ void keyPressed() {
       enemies.setPause(false);
       break;
     case ' ':
-      stMan.StartAnim();
-      gameState = GameStates.StartAnimationPlaying;
+      if(gameState == GameStates.Inviting) {
+        stMan.StartAnim();
+        gameState = GameStates.StartAnimationPlaying;
+      }
       break;
   }
 }
