@@ -2,6 +2,13 @@ import SimpleOpenNI.*;
 import gifAnimation.*;
 import ddf.minim.*;
 
+Minim minim;
+AudioPlayer mainSound;
+AudioPlayer explosion;
+AudioPlayer lineChange;
+AudioPlayer over;
+AudioPlayer start;
+MusicManager musMan;
 //import pbox2d.*;
 //import org.jbox2d.collision.shapes.*;
 //import org.jbox2d.common.*;
@@ -11,6 +18,7 @@ import ddf.minim.*;
 
 PImage main_background;
 PImage road_part;
+PImage newGame;
 SimpleOpenNI kinect;
 boolean isTracking = false;
 //boolean isGameRunning = false;
@@ -40,6 +48,8 @@ void setup() {
   STanim = new Gif(this, "images/123.gif");
   stMan = new StartupManager(STanim);
   road_part = loadImage("images/RoadPart.jpg");
+  newGame = loadImage("images/start-new-game.png");
+  newGame.resize(200, 180);
   main_background = createImage(road_part.width * lines_count, road_part.height, ARGB);
   size(main_background.width, main_background.height);
   noStroke();
@@ -58,13 +68,14 @@ void setup() {
   projCoM = new PVector();
   //c = new Car(new Vec2(100,100));
 
-  //player.play();
+  minim = new Minim(this);
+  musMan = new MusicManager();
+  musMan.playMain();
 }
 
 void draw() {
   onGameStateChange();
   kinect.update();
-  
   for (int i = 0; i < lines_count; i++){
     image(road_part, road_part.width*i, 0);
   }
@@ -134,6 +145,9 @@ void draw() {
       println("isGameRunning");
     }
   }*/
+  if (gameState == GameStates.Inviting){
+    image(newGame, main_background.width / 2 - newGame.width / 2, main_background.height / 2 - newGame.height / 2);
+  }
 }
 
 void onGameStateChange() {
