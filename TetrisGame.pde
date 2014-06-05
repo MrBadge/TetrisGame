@@ -1,9 +1,5 @@
 import SimpleOpenNI.*;
 import gifAnimation.*;
-import ddf.minim.*;
-
-Minim minim;
-AudioPlayer player;
 //import pbox2d.*;
 //import org.jbox2d.collision.shapes.*;
 //import org.jbox2d.common.*;
@@ -13,7 +9,6 @@ AudioPlayer player;
 
 PImage main_background;
 PImage road_part;
-PImage stNewGame;
 SimpleOpenNI kinect;
 boolean isTracking = false;
 //boolean isGameRunning = false;
@@ -43,8 +38,6 @@ void setup() {
   STanim = new Gif(this, "images/123.gif");
   stMan = new StartupManager(STanim);
   road_part = loadImage("images/RoadPart.jpg");
-  stNewGame = loadImage("images/start-new-game.png");
-  stNewGame.resize(200, 200);
   main_background = createImage(road_part.width * lines_count, road_part.height, ARGB);
   size(main_background.width, main_background.height);
   noStroke();
@@ -62,10 +55,6 @@ void setup() {
   plTracker = new PlayerTracker(cell_height);
   projCoM = new PVector();
   //c = new Car(new Vec2(100,100));
-
-  minim = new Minim(this);
-  player = minim.loadFile("sounds/main.mp3");
-  player.play();
 }
 
 void draw() {
@@ -85,10 +74,6 @@ void draw() {
     line(0, cell_width*i, main_background.width, cell_width*i);
   }
 
-  if (gameState == GameStates.Inviting){
-    image(stNewGame, main_background.width / 2 - stNewGame.width / 2, main_background.height / 2 - stNewGame.height / 2);
-  }
-
   gameover.display();
   stMan.displayAnimation();
   plTracker.display();
@@ -104,7 +89,7 @@ void draw() {
       kinect.getCoM(uid,realCoM);
       kinect.convertRealWorldToProjective(realCoM, projCoM);
       if (projCoM.x < main_background.width / 2){
-        plr.move(new Vec2(2, row_count - 2));
+          plr.move(new Vec2(2, row_count - 2));
       }else{
         plr.move(new Vec2(7, row_count - 2));
       }
