@@ -1,9 +1,8 @@
 import SimpleOpenNI.*;
 import gifAnimation.*;
 import ddf.minim.*;
+import beads.*;
 
-Minim minim;
-AudioPlayer player;
 //import pbox2d.*;
 //import org.jbox2d.collision.shapes.*;
 //import org.jbox2d.common.*;
@@ -64,9 +63,7 @@ void setup() {
   projCoM = new PVector();
   //c = new Car(new Vec2(100,100));
 
-  minim = new Minim(this);
-  player = minim.loadFile("sounds/main.mp3");
-  player.play();
+  //player.play();
 }
 
 void draw() {
@@ -105,9 +102,9 @@ void draw() {
       kinect.getCoM(uid,realCoM);
       kinect.convertRealWorldToProjective(realCoM, projCoM);
       if (projCoM.x < main_background.width / 2){
-        plr.move(new Vec2(2, row_count - 2));
+        plr.move(new Vec2(2, row_count - 3));
       }else{
-        plr.move(new Vec2(7, row_count - 2));
+        plr.move(new Vec2(7, row_count - 3));
       }
       //if (kinect.isTrackingSkeleton(uid)){
         /*PVector realHead=new PVector();
@@ -148,7 +145,7 @@ void draw() {
   }*/
 }
 
-void onGameStateChange(){
+void onGameStateChange() {
     /*if (isTracking && gameState == GameStates.Inviting){
       stMan.StartAnim();
       gameState = GameStates.StartAnimantionPlaying;
@@ -170,8 +167,7 @@ void onGameStateChange(){
     prevState = gameState;
 }
 
-void onNewUser(SimpleOpenNI kin, int userId)
-{
+void onNewUser(SimpleOpenNI kin, int userId) {
   if (!isTracking){
     isTracking = true;
     stMan.StartAnim();
@@ -182,8 +178,7 @@ void onNewUser(SimpleOpenNI kin, int userId)
   }
 }
 
-void onLostUser(SimpleOpenNI curContext, int userId)
-{
+void onLostUser(SimpleOpenNI curContext, int userId) {
   println("onLostUser - userId: " + userId);
   isTracking = false;
   plTracker.hide();
