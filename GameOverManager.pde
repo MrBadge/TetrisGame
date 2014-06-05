@@ -48,8 +48,8 @@ class GameOverManager {
         for(int j = 0; j < cols; j++)
           tiles[i][j] = true;
       else{
-        enemies = new Enemies(cell_width, cell_height, 150);
         direction = true;
+        enemies = null;
       }
     }
   }

@@ -1,7 +1,6 @@
 import SimpleOpenNI.*;
 import gifAnimation.*;
 import ddf.minim.*;
-import beads.*;
 
 //import pbox2d.*;
 //import org.jbox2d.collision.shapes.*;
@@ -12,7 +11,6 @@ import beads.*;
 
 PImage main_background;
 PImage road_part;
-PImage stNewGame;
 SimpleOpenNI kinect;
 boolean isTracking = false;
 //boolean isGameRunning = false;
@@ -42,8 +40,6 @@ void setup() {
   STanim = new Gif(this, "images/123.gif");
   stMan = new StartupManager(STanim);
   road_part = loadImage("images/RoadPart.jpg");
-  stNewGame = loadImage("images/start-new-game.png");
-  stNewGame.resize(200, 200);
   main_background = createImage(road_part.width * lines_count, road_part.height, ARGB);
   size(main_background.width, main_background.height);
   noStroke();
@@ -57,7 +53,6 @@ void setup() {
   cell_height = main_background.height / row_count;
   plr = new Car(new Vec2(main_background.width / 2, cell_height * 2), cell_width, cell_height);
   plr.move(new Vec2(2, row_count - 3));
-  enemies = new Enemies(cell_width, cell_height, 150);
   gameover = new GameOverManager(row_count, col_count, cell_width, cell_height);
   plTracker = new PlayerTracker(cell_height);
   projCoM = new PVector();
@@ -83,14 +78,10 @@ void draw() {
     line(0, cell_width*i, main_background.width, cell_width*i);
   }
 
-  if (gameState == GameStates.Inviting){
-    image(stNewGame, main_background.width / 2 - stNewGame.width / 2, main_background.height / 2 - stNewGame.height / 2);
-  }
-
   gameover.display();
   stMan.displayAnimation();
-  enemies.display(plr);
   plTracker.display();
+  if(enemies != null) enemies.display(plr);
   
   if (gameState == GameStates.Running){
     if (isTracking){
@@ -151,6 +142,7 @@ void onGameStateChange() {
       gameState = GameStates.StartAnimantionPlaying;
     }*/
     if (gameState == GameStates.Running && prevState == GameStates.StartAnimationPlaying){
+      enemies = new Enemies(cell_width, cell_height, 150, 40, 10);
       enemies.setPause(false);
     }
     if (gameState == GameStates.FinishAnimationPlaying && prevState == GameStates.Running){
