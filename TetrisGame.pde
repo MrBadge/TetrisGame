@@ -196,9 +196,11 @@ void keyPressed() {
         enemies.setPause(false);
       break;
     case ' ':
-      stMan.StartAnim();
-      //musMan.playMain();
-      gameState = GameStates.StartAnimationPlaying;
+      if(gameState == GameStates.Inviting) {
+        stMan.StartAnim();
+        //musMan.playMain();
+        gameState = GameStates.StartAnimationPlaying;
+      }
       break;
   }
 }
