@@ -32,6 +32,13 @@ public class Car {
     return (int)mc.y;
   }
 
+  public int getCurLine() {
+    if (mc.x < 5)
+      return 0;
+    else 
+      return 1;
+  }
+
   void display() {
     stroke(0);
     //rectMode(CENTER);

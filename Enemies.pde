@@ -95,7 +95,10 @@ class Enemies {
       update();
       if (collisionExists(plr)){
         //println("Collision!" + Math.random());
+        musMan.pauseMain();
+        musMan.playExplosion();
         gameState = GameStates.FinishAnimationPlaying;
+        musMan.playOver();
       }
       time = millis();
     }

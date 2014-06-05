@@ -9,22 +9,13 @@ AudioPlayer lineChange;
 AudioPlayer over;
 AudioPlayer start;
 MusicManager musMan;
-//import pbox2d.*;
-//import org.jbox2d.collision.shapes.*;
-//import org.jbox2d.common.*;
-//import org.jbox2d.dynamics.*;
-//import org.jbox2d.dynamics.joints.*;
-//import java.util.Random;
 
 PImage main_background;
 PImage road_part;
 PImage newGame;
 SimpleOpenNI kinect;
 boolean isTracking = false;
-//boolean isGameRunning = false;
-//boolean isAnimPlaying = false;
-//PBox2D box2d;
-//ArrayList<Box> boxes;
+
 Car plr;
 Enemies enemies;
 GameOverManager gameover;
@@ -37,8 +28,6 @@ int col_count = 10;
 int lines_count = 2;
 PVector projCoM;
 Gif STanim;
-
-//GameStates GameStates { isRunning, isStarting, isFinishing, isTracking, isInviting }
 
 GameStates gameState = GameStates.Inviting;
 GameStates prevState = GameStates.Inviting;
@@ -66,7 +55,6 @@ void setup() {
   gameover = new GameOverManager(row_count, col_count, cell_width, cell_height);
   plTracker = new PlayerTracker(cell_height);
   projCoM = new PVector();
-  //c = new Car(new Vec2(100,100));
 
   minim = new Minim(this);
   musMan = new MusicManager();
@@ -81,13 +69,14 @@ void draw() {
   }
   //background(main_background);
   //fill(0, 255, 0, 0);
-  stroke(0, 255, 0, 255);
+  //green cells on road
+  /*stroke(0, 255, 0, 255);
   for (int i = 1; i < col_count; i++){
     line(cell_height*i, 0, cell_height*i, main_background.height);
   }
   for (int i = 1; i <  row_count; i++){
     line(0, cell_width*i, main_background.width, cell_width*i);
-  }
+  }*/
 
   gameover.display();
   stMan.displayAnimation();
@@ -104,8 +93,12 @@ void draw() {
       kinect.getCoM(uid,realCoM);
       kinect.convertRealWorldToProjective(realCoM, projCoM);
       if (projCoM.x < main_background.width / 2){
+        if (plr.getCurLine() == 1)
+          musMan.playLineChange();
         plr.move(new Vec2(2, row_count - 3));
       }else{
+        if (plr.getCurLine() == 0)
+          musMan.playLineChange();
         plr.move(new Vec2(7, row_count - 3));
       }
       //if (kinect.isTrackingSkeleton(uid)){
@@ -132,31 +125,17 @@ void draw() {
     plr.display();
   }
 
-  /*if (isTracking && !isGameRunning){
-    if (!isAnimPlaying){
-      STanim.play();
-      isAnimPlaying = true;
-    }
-    image(STanim, main_background.width / 2 - STanim.width / 2, main_background.height / 2 - STanim.height / 2);
-    if (!STanim.isPlaying()){
-      STanim.stop();
-      isGameRunning = true;
-      isAnimPlaying = false;
-      println("isGameRunning");
-    }
-  }*/
   if (gameState == GameStates.Inviting){
     image(newGame, main_background.width / 2 - newGame.width / 2, main_background.height / 2 - newGame.height / 2);
   }
 }
 
 void onGameStateChange() {
-    /*if (isTracking && gameState == GameStates.Inviting){
-      stMan.StartAnim();
-      gameState = GameStates.StartAnimantionPlaying;
-    }*/
+    if (gameState == GameStates.StartAnimationPlaying && prevState == GameStates.Inviting){
+      musMan.playStart();
+    }
     if (gameState == GameStates.Running && prevState == GameStates.StartAnimationPlaying){
-      enemies = new Enemies(cell_width, cell_height, 150, 40, 10);
+      enemies = new Enemies(cell_width, cell_height, 150, 50, 7);
       enemies.setPause(false);
     }
     if (gameState == GameStates.FinishAnimationPlaying && prevState == GameStates.Running){
@@ -166,6 +145,11 @@ void onGameStateChange() {
     if (isTracking && gameState == GameStates.Inviting && prevState == GameStates.FinishAnimationPlaying){
       stMan.StartAnim();
       gameState = GameStates.StartAnimationPlaying;
+      musMan.playMain();
+      musMan.playStart();
+    }
+    if (!isTracking && gameState == GameStates.Inviting && prevState == GameStates.FinishAnimationPlaying){
+      musMan.playMain();
     }
     if (prevState != gameState){
       println("GameState: "+ gameState);
@@ -189,7 +173,6 @@ void onLostUser(SimpleOpenNI curContext, int userId) {
   isTracking = false;
   plTracker.hide();
   gameState = GameStates.FinishAnimationPlaying;
-  //isGameRunning = false;
 }
 
 void keyPressed() {
@@ -207,11 +190,19 @@ void keyPressed() {
       break;
     case DOWN:
       //isGameRunning = true;
-      enemies.setPause(false);
+      if (enemies != null)
+        enemies.setPause(false);
       break;
     case ' ':
       stMan.StartAnim();
+      //musMan.playMain();
       gameState = GameStates.StartAnimationPlaying;
       break;
   }
+}
+
+void stop() {
+  musMan.stopAll();
+
+  super.stop();
 }
