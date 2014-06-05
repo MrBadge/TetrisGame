@@ -37,36 +37,41 @@ class GameOverManager {
       if(i < rows)
         for(int j = 0; j < cols; j++)
           tiles[i][j] = false;
-      else
+      else{
+        gameState = GameStates.Inviting;
         animation = false;
+      }
     } else {
       int i;
       for(i = rows-1; i >= 0 && tiles[i][0]; i--){}
       if(i >= 0)
         for(int j = 0; j < cols; j++)
           tiles[i][j] = true;
-      else
+      else{
+        enemies = new Enemies(cell_width, cell_height, 150);
         direction = true;
+      }
     }
   }
   
   public void display() {
-    if((millis() - time > speed) && animation)
+    if(animation && (millis() - time > speed))
     {
       update();
       time = millis();
     }
     
     stroke(0);
-    for(int i = 0; i < rows; i++)
-      for(int j = 0; j < cols; j++)
-        if(tiles[i][j])
-        {
-          fill(255);
-          rect(j*w, i*h, w, h);
-          fill(0);
-          rect((j + 0.2)*w, (i + 0.2)*h, (int)w*0.6, (int)h*0.6);
-        }
+    if (animation)
+      for(int i = 0; i < rows; i++)
+        for(int j = 0; j < cols; j++)
+          if(tiles[i][j])
+          {
+            fill(255);
+            rect(j*w, i*h, w, h);
+            fill(0);
+            rect((j + 0.2)*w, (i + 0.2)*h, (int)w*0.6, (int)h*0.6);
+          }
     
   }
   

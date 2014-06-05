@@ -17,7 +17,7 @@ class Enemies {
     last_enemy_time = 3;
     p_gen = 0.5;
     time = millis();
-    pause = false;
+    pause = true;
   }
 
   void generate_enemy(boolean side) {
@@ -121,6 +121,7 @@ class Enemies {
       update();
       if (collisionExists(plr)){
         //println("Collision!" + Math.random());
+        gameState = GameStates.FinishAnimationPlaying;
       }
       time = millis();
     }
