@@ -16,7 +16,7 @@ public class StartupManager {
 	}
 
 	public void displayAnimation() {
-		if (gameState == GameStates.StartAnimantionPlaying)
+		if (gameState == GameStates.StartAnimationPlaying)
 			if (anim.isPlaying()){
 				image(anim, main_background.width / 2 - STanim.width / 2, main_background.height / 2 - STanim.height / 2);
 			}else {

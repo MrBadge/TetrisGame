@@ -3,6 +3,6 @@ enum GameStates{
 	Starting, 
 	Finishing,  
 	Inviting,
-	StartAnimantionPlaying,
+	StartAnimationPlaying,
 	FinishAnimationPlaying
 }

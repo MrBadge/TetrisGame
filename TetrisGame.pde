@@ -19,11 +19,13 @@ Car plr;
 Enemies enemies;
 GameOverManager gameover;
 StartupManager stMan;
+PlayerTracker plTracker;
 int cell_width;
 int cell_height;
 int row_count = 20;
 int col_count = 10;
 int lines_count = 2;
+PVector projCoM;
 Gif STanim;
 
 //GameStates GameStates { isRunning, isStarting, isFinishing, isTracking, isInviting }
@@ -48,9 +50,11 @@ void setup() {
   cell_width = main_background.width / col_count;
   cell_height = main_background.height / row_count;
   plr = new Car(new Vec2(main_background.width / 2, cell_height * 2), cell_width, cell_height);
-  plr.move(new Vec2(2, row_count - 2));
+  plr.move(new Vec2(2, row_count - 3));
   enemies = new Enemies(cell_width, cell_height, 150);
   gameover = new GameOverManager(row_count, col_count, cell_width, cell_height);
+  plTracker = new PlayerTracker(cell_height);
+  projCoM = new PVector();
   //c = new Car(new Vec2(100,100));
 }
 
@@ -73,8 +77,9 @@ void draw() {
 
   gameover.display();
   stMan.displayAnimation();
-
   enemies.display(plr);
+  plTracker.display();
+  
   if (gameState == GameStates.Running){
     if (isTracking){
       int[] users=kinect.getUsers();
@@ -83,10 +88,7 @@ void draw() {
 
       PVector realCoM=new PVector();
       kinect.getCoM(uid,realCoM);
-      PVector projCoM=new PVector();
       kinect.convertRealWorldToProjective(realCoM, projCoM);
-      fill(255,0,0);
-      ellipse(projCoM.x,projCoM.y,10,10);
       if (projCoM.x < main_background.width / 2){
           plr.move(new Vec2(2, row_count - 2));
       }else{
@@ -136,7 +138,7 @@ void onGameStateChange(){
       stMan.StartAnim();
       gameState = GameStates.StartAnimantionPlaying;
     }*/
-    if (gameState == GameStates.Running && prevState == GameStates.StartAnimantionPlaying){
+    if (gameState == GameStates.Running && prevState == GameStates.StartAnimationPlaying){
       enemies.setPause(false);
     }
     if (gameState == GameStates.FinishAnimationPlaying && prevState == GameStates.Running){
@@ -145,7 +147,7 @@ void onGameStateChange(){
     }
     if (isTracking && gameState == GameStates.Inviting && prevState == GameStates.FinishAnimationPlaying){
       stMan.StartAnim();
-      gameState = GameStates.StartAnimantionPlaying;
+      gameState = GameStates.StartAnimationPlaying;
     }
     if (prevState != gameState){
       println("GameState: "+ gameState);
@@ -158,7 +160,8 @@ void onNewUser(SimpleOpenNI kin, int userId)
   if (!isTracking){
     isTracking = true;
     stMan.StartAnim();
-    gameState = GameStates.StartAnimantionPlaying;
+    plTracker.show();
+    gameState = GameStates.StartAnimationPlaying;
     println("onNewUser - userId: " + userId);
     kin.startTrackingSkeleton(userId);
   }
@@ -168,6 +171,7 @@ void onLostUser(SimpleOpenNI curContext, int userId)
 {
   println("onLostUser - userId: " + userId);
   isTracking = false;
+  plTracker.hide();
   gameState = GameStates.FinishAnimationPlaying;
   //isGameRunning = false;
 }
@@ -176,10 +180,10 @@ void keyPressed() {
   switch(keyCode)
   {
     case LEFT:
-      if(gameState == GameStates.Running) plr.move(new Vec2(2, row_count - 2));
+      if(gameState == GameStates.Running) plr.move(new Vec2(2, row_count - 3));
       break;
     case RIGHT:
-      if(gameState == GameStates.Running) plr.move(new Vec2(7, row_count - 2));
+      if(gameState == GameStates.Running) plr.move(new Vec2(7, row_count - 3));
       break;
     case UP:
       //isGameRunning = false;
@@ -190,7 +194,8 @@ void keyPressed() {
       enemies.setPause(false);
       break;
     case ' ':
-      gameState = GameStates.Running;
+      stMan.StartAnim();
+      gameState = GameStates.StartAnimationPlaying;
       break;
   }
 }
