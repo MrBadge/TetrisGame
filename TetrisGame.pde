@@ -51,7 +51,6 @@ void setup() {
   cell_height = main_background.height / row_count;
   plr = new Car(new Vec2(main_background.width / 2, cell_height * 2), cell_width, cell_height);
   plr.move(new Vec2(2, row_count - 3));
-  enemies = new Enemies(cell_width, cell_height, 150);
   gameover = new GameOverManager(row_count, col_count, cell_width, cell_height);
   plTracker = new PlayerTracker(cell_height);
   projCoM = new PVector();
@@ -77,8 +76,8 @@ void draw() {
 
   gameover.display();
   stMan.displayAnimation();
-  enemies.display(plr);
   plTracker.display();
+  if(enemies != null) enemies.display(plr);
   
   if (gameState == GameStates.Running){
     if (isTracking){
@@ -139,6 +138,7 @@ void onGameStateChange(){
       gameState = GameStates.StartAnimantionPlaying;
     }*/
     if (gameState == GameStates.Running && prevState == GameStates.StartAnimationPlaying){
+      enemies = new Enemies(cell_width, cell_height, 150, 40, 10);
       enemies.setPause(false);
     }
     if (gameState == GameStates.FinishAnimationPlaying && prevState == GameStates.Running){
