@@ -150,14 +150,13 @@ void onGameStateChange() {
       enemies.setPause(true);
       gameover.startGameOverAnimation(50);
     }
-    if (isTracking && gameState == GameStates.Inviting && prevState == GameStates.FinishAnimationPlaying){
-      stMan.StartAnim();
-      gameState = GameStates.StartAnimationPlaying;
+    if (gameState == GameStates.Inviting && prevState == GameStates.FinishAnimationPlaying){
       musMan.playMain();
-      musMan.playStart();
-    }
-    if (!isTracking && gameState == GameStates.Inviting && prevState == GameStates.FinishAnimationPlaying){
-      musMan.playMain();
+      if (isTracking){
+        stMan.StartAnim();
+        gameState = GameStates.StartAnimationPlaying;
+        musMan.playStart();
+      }
     }
     if (gameState == GameStates.Running && prevState == GameStates.StartAnimationPlaying){
       plrPoints = 0;
@@ -173,7 +172,8 @@ void onNewUser(SimpleOpenNI kin, int userId) {
     isTracking = true;
     stMan.StartAnim();
     plTracker.show();
-    gameState = GameStates.StartAnimationPlaying;
+    if (gameState != GameStates.FinishAnimationPlaying)
+      gameState = GameStates.StartAnimationPlaying;
     println("onNewUser - userId: " + userId);
     kin.startTrackingSkeleton(userId);
   }
@@ -183,7 +183,8 @@ void onLostUser(SimpleOpenNI curContext, int userId) {
   println("onLostUser - userId: " + userId);
   isTracking = false;
   plTracker.hide();
-  gameState = GameStates.FinishAnimationPlaying;
+  if (gameState != GameStates.Inviting)
+    gameState = GameStates.FinishAnimationPlaying;
 }
 
 void keyPressed() {
