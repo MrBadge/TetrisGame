@@ -92,14 +92,16 @@ class Enemies {
       }
     }
     if (millis() - time >= update_step && !pause) {
-      update();
       if (collisionExists(plr)){
         //println("Collision!" + Math.random());
         musMan.pauseMain();
         musMan.playExplosion();
         gameState = GameStates.FinishAnimationPlaying;
         musMan.playOver();
+        return;
       }
+      update();
+      plrPoints += 1;
       time = millis();
     }
   }

@@ -10,6 +10,8 @@ AudioPlayer over;
 AudioPlayer start;
 MusicManager musMan;
 
+PFont f;
+
 PImage main_background;
 PImage road_part;
 PImage newGame;
@@ -17,10 +19,13 @@ SimpleOpenNI kinect;
 boolean isTracking = false;
 
 Car plr;
+int plrPoints;
 Enemies enemies;
+
 GameOverManager gameover;
 StartupManager stMan;
 PlayerTracker plTracker;
+
 int cell_width;
 int cell_height;
 int row_count = 20;
@@ -59,6 +64,8 @@ void setup() {
   minim = new Minim(this);
   musMan = new MusicManager();
   musMan.playMain();
+
+  f = createFont("Arial Bold", 30, true); 
 }
 
 void draw() {
@@ -130,6 +137,11 @@ void draw() {
   if (gameState == GameStates.Inviting){
     image(newGame, main_background.width / 2 - newGame.width / 2, main_background.height / 2 - newGame.height / 2);
   }
+
+  textFont(f);       
+  fill(255, 0, 0);
+  textAlign(CENTER);
+  text(plrPoints, main_background.width / 2, 60);
 }
 
 void onGameStateChange() {
@@ -152,6 +164,9 @@ void onGameStateChange() {
     }
     if (!isTracking && gameState == GameStates.Inviting && prevState == GameStates.FinishAnimationPlaying){
       musMan.playMain();
+    }
+    if (gameState == GameStates.Running && prevState == GameStates.StartAnimationPlaying){
+      plrPoints = 0;
     }
     if (prevState != gameState){
       println("GameState: "+ gameState);
