@@ -20,6 +20,8 @@ public class Car {
   }
 
   public void move(Vec2 cntr) {
+    if (mc.x != cntr.x && musMan != null)
+      musMan.playLineChange();
     mc = cntr.clone();
   }
 

@@ -31,7 +31,12 @@ class Enemies {
     if(side) {
       x = 7;
     }
-    enemyList.add(new Car(new Vec2(x, -2), w, h));
+    if (Math.random() < 0.95){
+      enemyList.add(new Car(new Vec2(x, -2), w, h));
+    }
+    else {
+      enemyList.add(new Bonus(BonusTypes.SpeedDec, 0.05, new Vec2(x, -2), w, h));
+    }
   }
 
   void generate_enemy(){
@@ -82,6 +87,15 @@ class Enemies {
       steps_left++;
   }
 
+  void getBonus(Bonus b) {
+    switch (b.bType) {
+      case SpeedDec:
+        update_step += step_inc;
+        println(update_step); 
+        break;     
+    }
+  }
+
   public void display(Car plr) {
     for(Car c : enemyList) {
       if (c.finished()){
@@ -92,14 +106,32 @@ class Enemies {
       }
     }
     if (millis() - time >= update_step && !pause) {
-      if (collisionExists(plr)){
+      Bonus tmp = null;
+      for (Car c : enemyList) {
+        if (plr.intersectsWith(c)) {
+          boolean isBonus = c instanceof Bonus;
+          if (!isBonus){
+            musMan.pauseMain();
+            musMan.playExplosion();
+            gameState = GameStates.FinishAnimationPlaying;
+            musMan.playOver();
+            return;
+          }else {
+            tmp = (Bonus)c;
+            musMan.playBonus();
+            getBonus((Bonus)c);
+          }
+        }
+      }
+      enemyList.remove(tmp);
+      /*if (collisionExists(plr)){
         //println("Collision!" + Math.random());
         musMan.pauseMain();
         musMan.playExplosion();
         gameState = GameStates.FinishAnimationPlaying;
         musMan.playOver();
         return;
-      }
+      }*/
       update();
       plrPoints += 1;
       time = millis();

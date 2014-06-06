@@ -6,6 +6,7 @@ public class MusicManager {
 		over = minim.loadFile("sounds/game_over.mp3");
 		lineChange = minim.loadFile("sounds/line_change.wav");
 		explosion = minim.loadFile("sounds/car_explosion.mp3");
+		bonus = minim.loadFile("sounds/bonus.mp3");
 	}
 
 	void playMain() {
@@ -37,6 +38,11 @@ public class MusicManager {
 	void playExplosion() {
 		explosion.play();
 		explosion.rewind();
+	}
+
+	void playBonus() {
+		bonus.play();
+		bonus.rewind();
 	}
 
 	void stopAll() {
