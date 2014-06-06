@@ -43,8 +43,7 @@ void setup() {
   STanim = new Gif(this, "images/123.gif");
   stMan = new StartupManager(STanim);
   road_part = loadImage("images/RoadPart.jpg");
-  newGame = loadImage("images/start-new-game.png");
-  newGame.resize(200, 180);
+  newGame = loadImage("images/newGame.png");
   main_background = createImage(road_part.width * lines_count, road_part.height, ARGB);
   size(main_background.width, main_background.height);
   noStroke();
