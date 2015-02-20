@@ -80,7 +80,8 @@ class Enemies {
     }
     generate_enemy();
     if(steps_left == steps) {
-      update_step -= step_inc;
+      if (update_step > 35)
+        update_step -= step_inc;
       steps_left = 0;
       println(update_step);
     } else
